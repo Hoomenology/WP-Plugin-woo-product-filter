@@ -1,7 +1,8 @@
 .wpfFilterWrapper label{
 	font-weight: normal;
 }
-.wpfPriceRangeField#wpfMinPrice, .wpfPriceRangeField#wpfMaxPrice{
+.wpfPriceRangeField#wpfMinPrice,
+.wpfPriceRangeField#wpfMaxPrice {
 	background-color: #f9f9f9;
 	border: 1px solid #6e6666;
 	color: black;

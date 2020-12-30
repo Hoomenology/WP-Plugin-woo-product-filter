@@ -1,5 +1,5 @@
 (function ($, app) {
-"use strict";
+	"use strict";
 	function WpfFrontendPage() {
 		this.$obj = this;
 		this.noWoo = this.$obj.checkNoWooPage();
@@ -9,6 +9,7 @@
 	WpfFrontendPage.prototype.init = (function () {
 		var _thisObj = this.$obj;
 		_thisObj.isAdminPreview = jQuery('#wpfFiltersEditForm').length > 0;
+		_thisObj.checkForceFilters();
 		_thisObj.eventsPriceFilter();
 		_thisObj.disableLeerOptions();
 		_thisObj.eventsFrontend();
@@ -19,7 +20,23 @@
 		_thisObj.hideFiltersLoader();
 		_thisObj.addSpecificPluginActions();
 	});
-
+	
+	WpfFrontendPage.prototype.checkForceFilters = (function() {
+		var forceShowFilter = jQuery('.wpfMainWrapper[data-force="1"]');
+		if (!forceShowFilter.length) return;
+		
+		jQuery('.wpfMainWrapper').each(function () {
+			var wrapper = jQuery(this),
+				forceShowCurrent = wrapper.attr('data-force');
+			if (!forceShowCurrent){
+				wrapper.remove();
+				if (wrapper.closest('.WpfWoofiltersWidget').length) {
+					wrapper.closest('.WpfWoofiltersWidget').remove();
+				}
+			}
+		});
+	});
+	
 	WpfFrontendPage.prototype.showFiltersLoader = (function() {
 		jQuery('.wpfMainWrapper').each(function () {
 			var wrapper = jQuery(this);
@@ -297,9 +314,18 @@
 		//Clear filters
 		jQuery('.wpfClearButton').on('click', function(e){
 			e.preventDefault();
-			var $filterWrapper = jQuery(this).closest('.wpfMainWrapper');
-			_thisObj.clearFilters($filterWrapper.find('.wpfFilterWrapper'), true);
-			_thisObj.filtering($filterWrapper);
+			var $filterWrapper = jQuery(this).closest('.wpfMainWrapper'),
+				settings = _thisObj.getFilterMainSettings($filterWrapper),
+				resetAllFilters = typeof settings.settings.reset_all_filters !== 'undefined' ? settings.settings.reset_all_filters : 0;
+
+			if (resetAllFilters !== '0') {
+				jQuery('.wpfMainWrapper').each(function(){
+					_thisObj.clearFilters(jQuery(this).find('.wpfFilterWrapper'), true);
+				});
+			} else {
+				_thisObj.clearFilters($filterWrapper.find('.wpfFilterWrapper'), true);
+			}
+			_thisObj.filtering($filterWrapper, true);
 		});
 
 		//price range choose only one checkbox
@@ -362,6 +388,7 @@
 			}
 		});
 
+		//after change input or dropdown make this filter active
 		jQuery('.wpfFilterWrapper input:not(.passiveFilter)').on('change', function (e) {
 			e.preventDefault();
 			//check if input change move to top
@@ -538,7 +565,7 @@
 		});
 
 		//click on new pagination link with page number
-		jQuery('body').off('click', '.wpfNoWooPage .woocommerce-pagination li .page-numbers').on('click', '.wpfNoWooPage .woocommerce-pagination li .page-numbers', function (e) {
+		jQuery('body').off('click', '.wpfNoWooPage .woocommerce-pagination .page-numbers').on('click', '.wpfNoWooPage .woocommerce-pagination .page-numbers', function (e) {
 			e.preventDefault();
 			var _this = jQuery(this),
 				paginationWrapper = _this.closest('.woocommerce-pagination'),
@@ -671,7 +698,7 @@
 		}
 	});
 
-	WpfFrontendPage.prototype.filtering = (function ($filterWrapper) {
+	WpfFrontendPage.prototype.filtering = (function ($filterWrapper, clearAll) {
 		var _thisObj = this.$obj;
 		_thisObj.chageRangeFieldWidth();
 		if(_thisObj.isAdminPreview) return;
@@ -728,14 +755,9 @@
 
 			$filtersDataFrontend.push(valueToPushFrontend);
 		});
-		if(jQuery('.wpfFilterWrapper[data-filter-type="wpfSortBy"]').length == 0) {
-			var $wooCommerceSort = jQuery('.woocommerce-ordering select');
-			if($wooCommerceSort.length > 0) {
-				$filtersDataBackend.push({'id': 'wpfSortBy', 'settings': $wooCommerceSort.eq(0).val()});
-			}
-		}
 
 		_thisObj.changeUrlByFilterParams($filtersDataFrontend);
+
 		_thisObj.changeSlugByUrl();
 		_thisObj.QStringWork('wpf_reload', '', noWooPage, $filterWrapper, 'remove');
 		var settings = _thisObj.getFilterMainSettings($filterWrapper);
@@ -768,7 +790,7 @@
 		$shortcodeAttr = JSON.stringify($shortcodeAttr);
 
 		$generalSettings = JSON.parse($generalSettings);
-		var $settings = {
+		var $filterSettings = {
 			'filter_recount' : $generalSettings['settings']['filter_recount'] && ($generalSettings['settings']['filter_recount'] == '1') ? true : false,
 			'filter_recount_price' : $generalSettings['settings']['filter_recount_price'] && ($generalSettings['settings']['filter_recount_price'] == '1') ? true : false,
 			'text_no_products' : $generalSettings['settings']['text_no_products'] ? $generalSettings['settings']['text_no_products'] : '',
@@ -778,21 +800,33 @@
 			'remove_actions': $generalSettings['settings']['remove_actions'] && ($generalSettings['settings']['remove_actions'] == '1') ? true : false,
 			'filtering_by_variations': $generalSettings['settings']['filtering_by_variations'] && ($generalSettings['settings']['filtering_by_variations'] == '1') ? true : false,
 			'display_product_variations': $generalSettings['settings']['display_product_variations'] && ($generalSettings['settings']['display_product_variations'] == '1') ? true : false,
-			'count_product_shop': $generalSettings['settings']['count_product_shop'] ? $generalSettings['settings']['count_product_shop'] : false
+			'all_products_filtering': $generalSettings['settings']['all_products_filtering'] && ($generalSettings['settings']['all_products_filtering'] == '1') ? true : false,
+			'use_category_filtration': $generalSettings['settings']['use_category_filtration'] ? $generalSettings['settings']['use_category_filtration'] : 1
 		};
 
-		if($settings['count_product_shop'] > 0) {
-			_thisObj.QStringWork('wpf_count', $settings['count_product_shop'], noWooPage, $filterWrapper, 'change');
+		if($filterSettings['count_product_shop'] > 0) {
+			_thisObj.QStringWork('wpf_count', $filterSettings['count_product_shop'], noWooPage, $filterWrapper, 'change');
 		}
-		if($settings['sort_by_title']) {
+		if($filterSettings['sort_by_title']) {
 			_thisObj.QStringWork('wpf_order', 'title', noWooPage, $filterWrapper, 'change');
 		}
-		if($settings['filtering_by_variations']) {
+		if($filterSettings['filtering_by_variations']) {
 			_thisObj.QStringWork('wpf_fbv', 1, noWooPage, $filterWrapper, 'change');
-
-			if($settings['display_product_variations']) {
-				_thisObj.QStringWork('wpf_dpv', 1, noWooPage, $filterWrapper, 'change');
-			}
+		}
+		if($filterSettings['display_product_variations']) {
+			_thisObj.QStringWork('wpf_dpv', 1, noWooPage, $filterWrapper, 'change');
+		}
+		if ($filterSettings['all_products_filtering'] && !clearAll) {
+			_thisObj.QStringWork('all_products_filtering', '1', noWooPage, $filterWrapper, 'change');
+		}
+		if ($filtersDataBackend.length === 0) {
+			_thisObj.QStringWork('all_products_filtering', '', noWooPage, $filterWrapper, 'remove');
+		}
+		if ($filterSettings['f_multi_logic'] !== 'and' && !clearAll) {
+			_thisObj.QStringWork('filter_tax_block_logic', $filterSettings['f_multi_logic'], noWooPage, $filterWrapper, 'change');
+		}
+		if ($filtersDataBackend.length === 0) {
+			_thisObj.QStringWork('filter_tax_block_logic', '', noWooPage, $filterWrapper, 'remove');
 		}
 		// we always start from first page after filtering
 		if ($queryVarsSettings['paginate_type'] == 'query' || $queryVarsSettings['paginate_type'] == 'shortcode') {
@@ -800,11 +834,21 @@
 			_thisObj.QStringWork('product-page', '', noWooPage, $filterWrapper, 'remove');
 		}
 
+		var $woocommerceSettings = {};
+		if(jQuery('.wpfFilterWrapper[data-filter-type="wpfSortBy"]').length == 0) {
+			var $wooCommerceSort = jQuery('.woocommerce-ordering select');
+			if($wooCommerceSort.length > 0) {
+				$woocommerceSettings['woocommercefSortBy'] = $wooCommerceSort.eq(0).val();
+			}
+		}
+
+		// event for custom javascript hook
 		var customEvent = document.createEvent('Event');
 		customEvent.initEvent('wpfAjaxStart', false, true);
 		document.dispatchEvent(customEvent);
 		//ajax call to server
-		_thisObj.sendFiltersOptionsByAjax($filtersDataBackend, $queryVars, $settings, $generalSettings, $shortcodeAttr);
+		_thisObj.currentLoadId = $filterWrapper.attr('id');
+		_thisObj.sendFiltersOptionsByAjax($filtersDataBackend, $queryVars, $filterSettings, $generalSettings, $woocommerceSettings, $shortcodeAttr);
 	});
 
 	WpfFrontendPage.prototype.createOverlay = (function () {
@@ -828,7 +872,7 @@
 
 			filterAttribute = filterAttribute.split(",");
 			var count = filterAttribute.length;
-			for(var i = 0; i<count; i++){
+			for(var i = 0; i < count; i++){
 				_thisObj.QStringWork(filterAttribute[i], '', noWooPage, $filterWrapper, 'remove');
 			}
 
@@ -836,6 +880,7 @@
 				$filter.removeClass('wpfNotActive');
 			} else {
 				$filter.find('input').prop('checked', false);
+
 				if(filterType == 'mul_dropdown') {
 					$filter.find('select').val('');
 					$filter.find('select.jqmsLoaded').multiselect('reload');
@@ -865,6 +910,9 @@
 			}
 			if(clearAll) {
 				_thisObj.QStringWork('wpf_order', '', noWooPage, $filterWrapper, 'remove');
+			}
+			if(clearAll) {
+				_thisObj.QStringWork('all_products_filtering', '', noWooPage, $filterWrapper, 'remove');
 			}
 		});
 	});
@@ -1018,7 +1066,6 @@
 							product_attr = $filtersDataFrontend[i]['settings']['settings'],
 							delim = $filtersDataFrontend[i]['delim'];
 						product_attr = product_attr.join(delim ? delim : '|');
-
 						if (typeof product_attr !== 'undefined' && product_attr.length > 0) {
 							_thisObj.QStringWork(product_taxonomy, product_attr, noWooPage, filterWrapper, 'change');
 						}else{
@@ -1026,7 +1073,10 @@
 						}
 						break;
 					case 'wpfAuthor':
-						var authorVal = $filtersDataFrontend[i]['settings']['settings'];
+						var authorVal = $filtersDataFrontend[i]['settings']['settings'],
+							name = $filtersDataFrontend[i]['name'],
+							delim = $filtersDataFrontend[i]['delim'];
+							authorVal = authorVal.join(delim ? delim : '|');
 						if (typeof authorVal !== 'undefined' && authorVal.length > 0) {
 							_thisObj.QStringWork('pr_author', authorVal, noWooPage, filterWrapper, 'change');
 						}else{
@@ -1125,7 +1175,7 @@
 
 	});
 
-	WpfFrontendPage.prototype.sendFiltersOptionsByAjax = (function ($filtersData, $queryVars, $filterSettings, $generalSettings, $shortcodeAttr) {
+	WpfFrontendPage.prototype.sendFiltersOptionsByAjax = (function ($filtersDataBackend, $queryVars, $filterSettings, $generalSettings, $woocommerceSettings, $shortcodeAttr) {
 		var _thisObj = this.$obj,
 			$wrapperSettings = [];
 		if ( window.wpfAdminPage ) {
@@ -1133,7 +1183,6 @@
 		}
 		_thisObj.enableFiltersLoader();
 
-		var $filtersOptions = JSON.stringify($filtersData);
 		if ($filterSettings === undefined) {
 			$filterSettings = [];
 		} else {
@@ -1167,11 +1216,12 @@
 			data: {
 				mod: 'woofilters',
 				action: 'filtersFrontend',
-				options: $filtersOptions,
+				filtersDataBackend: JSON.stringify($filtersDataBackend),
 				queryvars: $queryVars,
-				settings: $filterSettings,
-				general: $generalSettings,
+				filterSettings: $filterSettings,
+				generalSettings: $generalSettings,
 				shortcodeAttr: $shortcodeAttr,
+				woocommerceSettings: JSON.stringify($woocommerceSettings),
 				currenturl: window.location.href,
 			},
 			onSuccess: function(res) {
@@ -1180,11 +1230,17 @@
 						loopSelector = wpfGetSelector(res.data['loopStartHtml'], true, 'ul.products', 3);
 					if (typeof jQuery('.product-categories-wrapper') !== 'undefined' && jQuery('.product-categories-wrapper > ul.products').length > 0) {
 						//replace cats html
-						jQuery('.product-categories-wrapper > ul.products').html(res.data['categoryHtml']);
+						if (res.data['categoryHtml'].length) {
+							jQuery('.product-categories-wrapper > ul.products').html(res.data['categoryHtml']);
+						}
 						//replace products html
 						jQuery('ul.products').eq(1).html(res.data['productHtml']);
 					} else if (jQuery('.elementor-widget-container ul.products').length > 0) {
-						jQuery('.elementor-widget-container ul.products').html(res.data['categoryHtml']+res.data['productHtml']);
+						jQuery('.elementor-widget-container ul.products').each(function(){
+							if (!jQuery(this).find('.product-category').length) {
+								jQuery(this).html(res.data['categoryHtml']+res.data['productHtml']);
+							}
+						});
 					} else if (jQuery('.woocommerce > .products[data-filterargs][data-innerargs]').length > 0) {
 						jQuery('.woocommerce > .products[data-filterargs][data-innerargs]').html(res.data['categoryHtml']+res.data['productHtml']);
 					} else {
@@ -1248,9 +1304,9 @@
 					_thisObj.removeOverlay();
 					toggleClear();
 
-					if ( jQuery('body').find('.products').hasClass('oceanwp-row') ) {
+					/*if ( jQuery('body').find('.products').hasClass('oceanwp-row') ) {
 						jQuery('body').find('.products li:first').addClass('entry').addClass('has-media').addClass('col').addClass('span_1_of_4').addClass('owp-content-left');
-					}
+					}*/
 					
 					_thisObj.changeLmpButton();
 					
@@ -1265,7 +1321,7 @@
 						heightIdenticalInRow('.et_pb_shop li.product');
 					}
 
-					// event for custom javascript from js editor, example: document.addEventListener('wpfAjaxSuccess', function(event) {alert('Custom js');});
+					// event for custom javascript hook, example: document.addEventListener('wpfAjaxSuccess', function(event) {alert('Custom js');});
 					//document.dispatchEvent(new Event('wpfAjaxSuccess')); - not work in IE11
 					var customEvent = document.createEvent('Event');
 					customEvent.initEvent('wpfAjaxSuccess', false, true); 
@@ -1305,6 +1361,11 @@
 				settings = _thisObj.getFilterMainSettings($filter.closest('.wpfMainWrapper'));
 
 			switch(filterType){
+				case 'wpfAttribute':
+					if(typeof(_thisObj.eventChangeFilterPro) == 'function') {
+						_thisObj.eventChangeFilterPro($filter, settings);
+					}
+					break;
 				case 'wpfPrice':
 					var minPrice = urlParams.min_price ? urlParams.min_price : $filter.attr('data-minvalue'),
 						maxPrice = urlParams.max_price ? urlParams.max_price : $filter.attr('data-maxvalue'),
@@ -1702,7 +1763,7 @@
 				frontendOptions[i] = option.attr('data-slug');
 				selectedOptions['list'][option.attr('data-term-id')] = _thisObj.getClearLabel(option.html(), withCount);
 			}
-		}else if(filterType === 'mul_dropdown'){
+		} else if (filterType === 'mul_dropdown'){
 			$filter.find(':selected').each(function () {
 				var option = jQuery(this);
 				options[i] = option.val();
@@ -1732,7 +1793,7 @@
 
 		return optionsArray;
 	});
-	
+
 	WpfFrontendPage.prototype.getAttributeFilterOptions = (function ($filter) {
 		var _thisObj = this.$obj,
 			optionsArray = [],
@@ -1741,27 +1802,22 @@
 			filterType = $filter.attr('data-display-type'),
 			selectedOptions = {'is_one': (filterType == 'dropdown'), 'list': []},
 			withCount = $filter.hasClass('wpfShowCount'),
-			i = 0;
+			i = 0,
+			proFilterType = [
+				'slider',
+				'colors'
+			];
 
 		//options for backend (filtering)
-		if(filterType === 'colors'){
-			$filter.find('input:checked').each(function () {
-				var input = jQuery(this),
-					id = input.attr('data-term-id');
-				options[i] = id;
-				frontendOptions[i] = input.attr('data-term-slug');
-				selectedOptions['list'][id] = input.parent().find('label.icon').attr('data-term-name');
-				i++;
-			});
-		}else if(filterType === 'dropdown'){
+		if (filterType === 'dropdown'){
 			var option = $filter.find(":selected"),
 				value = option.val();
-			if(value != '') {
+			if (value != '') {
 				options[i] = value;
 				frontendOptions[i] = option.attr('data-slug');
 				selectedOptions['list'][option.attr('data-term-id')] = _thisObj.getClearLabel(option.html(), withCount);
 			}
-		}else if(filterType === 'mul_dropdown'){
+		} else if (filterType === 'mul_dropdown'){
 			$filter.find(':selected').each(function () {
 				var option = jQuery(this);
 				options[i] = option.val();
@@ -1769,23 +1825,7 @@
 				selectedOptions['list'][option.attr('data-term-id')] = _thisObj.getClearLabel(option.html(), withCount);
 				i++;
 			});
-		}else if(filterType === 'slider'){
-			var values = $filter.find('.wpfAttrNumFilterRange').data('values').split(','),
-				slugs = $filter.find('.wpfAttrNumFilterRange').data('slugs').split(','),
-				termIds = $filter.find('.wpfAttrNumFilterRange').data('term-ids').split(','),
-				minAttrNum = $filter.find('#wpfMinAttrNum').val(),
-				maxAttrNum = $filter.find('#wpfMaxAttrNum').val(),
-				forceNumeric = $filter.find('.ion-range-slider').data('force-numeric') ? $filter.find('.ion-range-slider').data('force-numeric') : 0;
-			slugs.forEach(function(slug, index){
-				var value = forceNumeric ? parseFloat(values[index]) : values[index];
-				if ( index >= minAttrNum && index <= maxAttrNum ) {
-					options[i] = termIds[index];
-					frontendOptions[i] = slug;
-					selectedOptions['list'][slug] = $filter.attr('data-slug');
-					i++;
-				}
-			});
-		}else{
+		} else if (jQuery.inArray(filterType, proFilterType) == -1 ) {
 			$filter.find('input:checked').each(function () {
 				var li = jQuery(this).closest('li'),
 					id = li.attr('data-term-id');
@@ -1795,21 +1835,34 @@
 				i++;
 			});
 		}
-		optionsArray['backend'] = options;
+
+		var data = {
+			options : options,
+			frontendOptions : frontendOptions,
+			selectedOptions : selectedOptions,
+			i : i,
+		}
+
+		if (typeof window.wpfFrontendPage.getAttributeFilterOptionsPro == 'function') {
+			data = window.wpfFrontendPage.getAttributeFilterOptionsPro($filter, data);
+		}
+
+		optionsArray['backend'] = data.options;
 
 		//options for frontend(change url)
 		var getParams = $filter.attr('data-get-attribute');
 
 		optionsArray['frontend'] = [];
 		optionsArray['frontend']['taxonomy'] = getParams;
-		optionsArray['frontend']['settings'] = frontendOptions;
-		optionsArray['selected'] = selectedOptions;
+		optionsArray['frontend']['settings'] = data.frontendOptions;
+		optionsArray['selected'] = data.selectedOptions;
 
 		return optionsArray;
 	});
 
 	WpfFrontendPage.prototype.getAuthorFilterOptions = (function ($filter) {
-		var optionsArray = [],
+		var _thisObj = this.$obj,
+			optionsArray = [],
 			options = [],
 			frontendOptions = [],
 			filterType = $filter.attr('data-display-type'),
@@ -1826,7 +1879,15 @@
 				selectedOptions['list'][id] = li.find('.wpfValue').html();
 				i++;
 			});
-		}else if(filterType === 'dropdown'){
+		} else if (filterType === 'mul_dropdown'){
+			$filter.find(':selected').each(function () {
+				var option = jQuery(this);
+				options[i] = option.val();
+				frontendOptions[i] = option.attr('data-slug');
+				selectedOptions['list'][option.attr('data-term-id')] = _thisObj.getClearLabel(option.html());
+				i++;
+			});
+		} else if (filterType === 'dropdown'){
 			var option = $filter.find(":selected"),
 				value = option.val();
 			options[i] = value;
@@ -2287,51 +2348,96 @@ function wpfChangeFiltersCount (wpfExistTerms) {
 	jQuery('.wpfShowCount').find('select[multiple]').multiselect('reload');
 };
 
-function wpfShowHideFiltersAtts(wpfExistTerms) {
-	jQuery('.wpfFilterWrapper').filter('[data-show-all="0"]').each(function(){
+// show/hide individual filter itemss
+function wpfShowHideFiltersAtts(wpfExistTerms, wpfExistUsers) {
+	var curFilter = window.wpfFrontendPage.currentLoadId;
+
+	jQuery((curFilter ? '#' + curFilter + ' ' : '') + '.wpfFilterWrapper').each(function(){
 		var filter = jQuery(this),
+			filterType = filter.data('filter-type'),
+			filterContentType = filter.data('content-type'),
 			taxonomy = filter.data('taxonomy'),
 			getAttr = filter.data('get-attribute'),
-			isInSearch = getParameterByName(getAttr, location.search);
+			isFilterCurentlyActivated = getParameterByName(getAttr, location.search),
+			isShowAll = Boolean(filter.data('show-all')),
+			isNotInLogic = getAttr.indexOf('pr_filter') == -1 ? false : true,
+			userExistIds = [];
 
-		if (typeof taxonomy == 'undefined' || taxonomy.length == 0) {
-			taxonomy = filter.data('slug');
+		for(var userData of wpfExistUsers) {
+			userExistIds.push(parseInt(userData['ID']));
 		}
 
-		if (!isInSearch && getAttr.indexOf('pr_filter') == -1) {
-			if (taxonomy in wpfExistTerms) {
-				var termIds = wpfExistTerms[taxonomy];
-				filter.find('[data-term-id]').each(function () {
-					var elem = jQuery(this),
-						id = elem.data('term-id');
-					if (id in termIds) {
-						if(elem.closest('.wpfButtonsFilter').length) elem.css('display', 'inline-block');
-						else elem.show();
-						if (elem.parent().hasClass('wpfColorsColBlock')) {
-							elem.parent().parent().show();
+		switch (filterContentType) {
+			case 'user':
+				if ( !isFilterCurentlyActivated ) {
+					filter.find('[data-term-id]').each(function () {
+						var el = jQuery(this),
+							userId = el.data('term-id');
+
+						if (userExistIds.indexOf(userId) >= 0) {
+							el.show();
+						} else {
+							el.hide();
 						}
-						if (elem.closest('.wpfColorsRow').length) {
-							elem.parent().css('display', 'inline-block');
+					});
+				}
+				break;
+			case 'taxonomy':
+				if (typeof taxonomy == 'undefined' || taxonomy.length == 0) {
+					taxonomy = filter.data('slug');
+				}
+
+				if (!isFilterCurentlyActivated && !isNotInLogic && !isShowAll ) {
+					if (taxonomy in wpfExistTerms) {
+						var termIds = wpfExistTerms[taxonomy];
+						filter.find('[data-term-id]').each(function () {
+							var elem = jQuery(this),
+								id = elem.data('term-id');
+							if (id in termIds) {
+								if(elem.closest('.wpfButtonsFilter').length) elem.css('display', 'inline-block');
+								else elem.show();
+								if (elem.parent().hasClass('wpfColorsColBlock')) {
+									elem.parent().parent().show();
+								}
+								if (elem.closest('.wpfColorsRow').length) {
+									elem.parent().css('display', 'inline-block');
+								}
+							} else {
+								elem.hide();
+								elem.find('input').prop('checked', false);
+								if (elem.parent().hasClass('wpfColorsColBlock')) {
+									elem.parent().parent().hide();
+								}
+							}
+						});
+
+						if (filter.attr('data-display-type') == 'slider' ) {
+							if ( filter.find('.ion-range-slider').data('values') ) {
+								filter.show();
+							} else {
+								filter.hide();
+							}
+						} else {
+							// all terms display block already has css display none
+							if (filter.find('[data-term-id][style*="none"]').length == filter.find('[data-term-id]').length) {
+								filter.hide();
+							} else {
+								filter.show();
+							}
 						}
 					} else {
-						elem.hide();
-						elem.find('input').prop('checked', false);
-						if (elem.parent().hasClass('wpfColorsColBlock')) {
-							elem.parent().parent().hide();
-						}
+						filter.find('input').prop('checked', false);
+						filter.find('select').val('');
+						filter.hide();
 					}
-				});
-				if (filter.find('[data-term-id][style*="none"]').length == filter.find('[data-term-id]').length) filter.hide();
-				else filter.show();
-			} else {
-				filter.find('input').prop('checked', false);
-				filter.find('select').val('');
-				filter.hide();
-			}
-		}
-		filter.find('select[multiple]').multiselect('reload');
-		if(typeof(window.wpfFrontendPage.wpfShowHideFiltersAttsPro) == 'function') {
-			window.wpfFrontendPage.wpfShowHideFiltersAttsPro(filter);
+				}
+				filter.find('select[multiple]').multiselect('reload');
+				if(typeof(window.wpfFrontendPage.wpfShowHideFiltersAttsPro) == 'function') {
+					window.wpfFrontendPage.wpfShowHideFiltersAttsPro(filter);
+				}
+				break;
+			default:
+				// console.log(`Sorry, we are out of ${expr}.`);
 		}
 	});
 }

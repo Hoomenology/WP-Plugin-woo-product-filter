@@ -48,7 +48,7 @@ if (taxonomy_exists('pwb-brand')) {
 					<div class="row">
 						<div class="wpfCopyTextCodeSelectionShell col-lg-8 col-md-8 col-sm-8 col-xs-12">
 							<div class="row">
-								<div class="col-lg-3 col-md-4 col-sm-5 col-xs-12 wpfNamePadding">
+								<div class="col-lg-3 col-md-4 col-sm-5 col-xs-6 wpfNamePadding">
 									<span id="wpfFilterTitleWrapLabel"><?php echo esc_html__('Filter name:', 'woo-product-filter'); ?></span>
 									<span id="wpfFilterTitleShell" title="<?php echo esc_attr__('Click to edit', 'woo-product-filter'); ?>">
 										<?php $filterTitle = isset($this->filter['title']) ? $this->filter['title'] : 'empty'; ?>
@@ -63,14 +63,14 @@ if (taxonomy_exists('pwb-brand')) {
 										<i class="fa fa-fw fa-pencil"></i>
 									</span>
 								</div>
-								<div class="col-lg-2 col-md-3 col-sm-6 col-xs-6 wpfShortcodeAdm">
+								<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 wpfShortcodeAdm">
 									<select name="shortcode_example" id="wpfCopyTextCodeExamples" class="woobewoo-flat-input">
 										<option value="shortcode"><?php echo esc_html__('Filter Shortcode', 'woo-product-filter'); ?></option>
 										<option value="phpcode"><?php echo esc_html__('Filter PHP code', 'woo-product-filter'); ?></option>
 										<option value="shortcode_product"><?php echo esc_html__('Product Shortcode', 'woo-product-filter'); ?></option>
 										<option value="phpcode_product"><?php echo esc_html__('Product PHP code', 'woo-product-filter'); ?></option>
 									</select>
-									<i class="fa fa-question woobewoo-tooltip" title="<?php echo esc_attr__('Using short code you can display the filter and products in the desired place of the template.', 'woo-product-filter'); ?>"></i>
+									<i class="fa fa-question woobewoo-tooltip" title="<?php echo esc_attr(__('Using short code display the filter and products in the desired place of the template.', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/how-to-add-woocommerce-product-filter-to-shop/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 								</div>
 								<?php $fid = isset($this->filter['id']) ? $this->filter['id'] : ''; ?>
 								<?php if ($fid) { ?>
@@ -157,8 +157,11 @@ if (taxonomy_exists('pwb-brand')) {
 								<?php include_once 'woofiltersEditTabOptions.php'; ?>
 								<?php include_once 'woofiltersEditTabDesign.php'; ?>
 							</div>
-							<div class="col-md-3 wpfFiltersBlockPreview">
-
+							<div class="col-md-3">
+								<div class="hidden-lg hidden-md">
+									<div class="wpfPreviewTitle"><?php echo esc_html__('Preview', 'woo-product-filter'); ?></div>
+								</div>
+								<div class="wpfFiltersBlockPreview"></div>
 							</div>
 						</div>
 					</div>

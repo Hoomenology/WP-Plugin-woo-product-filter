@@ -89,16 +89,18 @@ class WoofiltersControllerWpf extends ControllerWpf {
 		$res = new ResponseWpf();
 
 		$params = ReqWpf::get('post');
-		$filterSettings = UtilsWpf::jsonDecode(stripslashes($params['settings']));
-		$settings = UtilsWpf::jsonDecode(stripslashes($params['options']));
-		$generalSettings = UtilsWpf::jsonDecode(stripslashes($params['general']));
-		$queryvars = UtilsWpf::jsonDecode(stripslashes($params['queryvars']));
-		$shortcodeAttr = UtilsWpf::jsonDecode(stripslashes($params['shortcodeAttr']));
 
+		$filtersDataBackend = UtilsWpf::jsonDecode(stripslashes($params['filtersDataBackend']));
+		$queryvars = UtilsWpf::jsonDecode(stripslashes($params['queryvars']));
+		$filterSettings = UtilsWpf::jsonDecode(stripslashes($params['filterSettings']));
+		$generalSettings = UtilsWpf::jsonDecode(stripslashes($params['generalSettings']));
+		$woocommerceSettings = UtilsWpf::jsonDecode(stripslashes($params['woocommerceSettings']));
+		$shortcodeAttr = isset($params['shortcodeAttr']) ? UtilsWpf::jsonDecode(stripslashes($params['shortcodeAttr'])) : array();
 		$curUrl = $params['currenturl'];
 		$queryvars['posts_per_page'] = isset($filterSettings['count_product_shop']) && !empty($filterSettings['count_product_shop']) ? $filterSettings['count_product_shop'] : $queryvars['posts_per_page'];
-
-		foreach ($settings as $key => $filteringSettings) {
+		$use_category_filtration = isset($filterSettings['use_category_filtration']) ? $filterSettings['use_category_filtration'] : 1;
+		
+		foreach ($filtersDataBackend as $key => $filteringSettings) {
 			if ('wpfCategory' == $filteringSettings['id']) {
 				$filterOrder = array_search($filteringSettings['uniqId'], array_column($generalSettings, 'uniqId'));
 				$logicHierarchical = $generalSettings[$filterOrder]['settings']['f_multi_logic_hierarchical'];
@@ -107,17 +109,17 @@ class WoofiltersControllerWpf extends ControllerWpf {
 				$isLogicHierarchical = ( $isHierarchical && in_array( $type, array( 'text', 'multi' ) ) );
 
 				if ($isLogicHierarchical && 'child' == $logicHierarchical) {
-					$settings[$key]['settings'] = $this->getModule()->exludeParentTems($settings[$key]['settings'], 'product_cat');
+					$filtersDataBackend[$key]['settings'] = $this->getModule()->exludeParentTems($filtersDataBackend[$key]['settings'], 'product_cat');
 				} elseif ($isLogicHierarchical && 'parent' == $logicHierarchical) {
-					$settings[$key]['settings'] = $this->getModule()->exludeChildTems($settings[$key]['settings'], 'product_cat');
+					$filtersDataBackend[$key]['settings'] = $this->getModule()->exludeChildTems($filtersDataBackend[$key]['settings'], 'product_cat');
 				}
 			}
 		}
 
-		$args = $this->createArgsForFilteringBySettings($settings, $queryvars, $filterSettings, $generalSettings, $shortcodeAttr);
+		$args = $this->createArgsForFilteringBySettings($filtersDataBackend, $queryvars, $filterSettings, $generalSettings, $woocommerceSettings, $shortcodeAttr);
 		$cacheArgs = $args;
 
-		DispatcherWpf::doAction('beforeFiltersFrontend', $settings);
+		DispatcherWpf::doAction('beforeFiltersFrontend', $filtersDataBackend);
 
 		$paged = empty($queryvars['paged']) ? 1 : $queryvars['paged'];
 		if (empty($params['runbyload']) && empty($queryvars['pagination'])) {
@@ -125,6 +127,8 @@ class WoofiltersControllerWpf extends ControllerWpf {
 		}
 		if (!empty($queryvars['posts_per_row'])) {
 			$customNums = $queryvars['posts_per_row'];
+			global $woocommerce_loop;
+			$woocommerce_loop['columns'] = $customNums; // needed for some themes, that check this property first
 			add_filter('loop_shop_columns', function( $num ) use ( $customNums ) {
 				return $customNums;
 			}, 999);
@@ -182,10 +186,10 @@ class WoofiltersControllerWpf extends ControllerWpf {
 			$taxonomies['count'] = array();
 		}
 		$args = DispatcherWpf::applyFilters('beforeFilterExistsTerms', $args, $filterSettings);
-		$terms = $module->getFilterExistsTerms($args, $taxonomies, $calcParentCategory);
+		$filterItems = $module->getFilterExistsItems($args, $taxonomies, $calcParentCategory);
 
-		$categoryIn = isset($terms['categories']) ? $terms['categories'] : array();
-		if (count($categoryIn) > 0) {
+		$categoryIn = isset($filterItems['categories']) ? $filterItems['categories'] : array();
+		if (count($categoryIn) > 0 && $use_category_filtration) {
 			ob_start();
 			$catIds = array_keys($categoryIn);
 			$cats = get_terms( 'product_cat', array(
@@ -205,7 +209,7 @@ class WoofiltersControllerWpf extends ControllerWpf {
 				remove_all_filters('posts_orderby');
 				remove_all_filters('pre_get_posts');
 			}
-			
+
 			//get products
 			$loop = new WP_Query(DispatcherWpf::applyFilters('beforeFiltersFrontendArgs', $args, $filterSettings));
 			$loopFoundPost = $loop->found_posts;
@@ -213,22 +217,24 @@ class WoofiltersControllerWpf extends ControllerWpf {
 				ob_start();
 				while ($loop->have_posts()) :
 					$loop->the_post();
-				
+
 					if ($displayProductVariations) {
 						DispatcherWpf::doAction('beforeDisplayProduct');
 					}
-					
+
 					wc_get_template_part('content', 'product');
 				endwhile;
 				$productsHtml = ob_get_clean();
 			} else {
 				$productsHtml = $filterSettings['text_no_products'];
 			}
-			if (false !== $terms) {
+			if (false !== $filterItems) {
 				if ($recount) {
-					$productsHtml .= '<script type="text/javascript">wpfChangeFiltersCount(' . json_encode($terms['exists']) . ');</script>';
+					$productsHtml .=
+						'<script type="text/javascript">wpfChangeFiltersCount(' . json_encode($filterItems['exists']) . ');</script>';
 				}
-				$productsHtml .= '<script type="text/javascript">wpfShowHideFiltersAtts(' . json_encode($terms['exists']) . ');</script>';
+				$productsHtml .=
+					'<script type="text/javascript">wpfShowHideFiltersAtts(' . json_encode($filterItems['exists']) . ', ' . json_encode($filterItems['existsUsers']) . ');</script>';
 			}
 		}
 
@@ -387,16 +393,27 @@ class WoofiltersControllerWpf extends ControllerWpf {
 		return $res->ajaxExec();
 	}
 
-	public function createArgsForFilteringBySettings( $settings, $queryvars, $filterSettings = array(), $generalSettings = array(), $shortcodeAttr = array() ) {
+	/**
+	 * Creat args for WP_Query
+	 *
+	 * @param array $filtersDataBackend Filters arranged with filtering order with some specific filtering data in it
+	 * @param array $queryvars Query fiiltering variables
+	 * @param array $filterSettings Some filter block settings
+	 * @param array $generalSettings Filters arranged with filtering order with all filter settings
+	 * @param array $woocommerceSettings If we do not have own filtering result we must take it from woocommerce if they are set
+	 *
+	 * @return array
+	 */
+	public function createArgsForFilteringBySettings( $filtersDataBackend, $queryvars, $filterSettings, $generalSettings, $woocommerceSettings, $shortcodeAttr ) {
 		$queryvars['product_tag'] = isset($queryvars['product_tag']) ? $queryvars['product_tag'] : false;
 		$queryvars['product_brand'] = isset($queryvars['product_brand']) ? $queryvars['product_brand'] : false;
 		$queryvars['pwb-brand'] = isset($queryvars['pwb-brand']) ? $queryvars['pwb-brand'] : false;
 		$queryvars['tax_page'] = isset($queryvars['tax_page']) ? $queryvars['tax_page'] : false;
 		$queryvars['vendors'] = isset($queryvars['vendors']) ? $queryvars['vendors'] : false;
 		$asDefaultCats = array();
-		$settingIds = array_column($settings, 'id');
+		$settingIds = array_column($filtersDataBackend, 'id');
 		$settingCats = array_keys($settingIds, 'wpfCategory');
-		$settingsMultiLogic = isset( $filterSettings['f_multi_logic'] ) ? $filterSettings['f_multi_logic'] : 'and';
+		$MultiLogic = isset( $filterSettings['f_multi_logic'] ) ? $filterSettings['f_multi_logic'] : 'and';
 		if (!count($settingCats)) {
 			foreach ($generalSettings as $generalSingle) {
 				if ( ( 'wpfCategory' == $generalSingle['id'] ) && $generalSingle['settings']['f_filtered_by_selected'] && !empty($generalSingle['settings']['f_mlist[]']) ) {
@@ -415,47 +432,61 @@ class WoofiltersControllerWpf extends ControllerWpf {
 		);
 		$args['tax_query'] = $this->getModule()->addHiddenFilterQuery($args['tax_query']);
 
-		if ( ( isset($queryvars['product_category_id']) || $asDefaultCats ) && !$queryvars['product_tag'] && !$queryvars['product_brand']  && !$queryvars['pwb-brand'] ) {
-			$args['tax_query'][] = array(
-				'taxonomy' => 'product_cat',
-				'field'    => 'id',
-				'terms'    => isset($queryvars['product_category_id']) ? $queryvars['product_category_id'] : $asDefaultCats,
-				'include_children' => true
-			);
-		} elseif ($queryvars['product_tag']) {
-			$args['tax_query'][] = array(
-				'taxonomy' => 'product_tag',
-				'field'    => 'id',
-				'terms'    => $queryvars['product_tag'],
-				'include_children' => true
-			);
-		} elseif ($queryvars['product_brand']) {
-			$args['tax_query'][] = array(
-				'taxonomy' => 'product_brand',
-				'field'    => 'id',
-				'terms'    => $queryvars['product_brand'],
-				'include_children' => true
-			);
-		} elseif ($queryvars['pwb-brand']) {
-			$args['tax_query'][] = array(
-				'taxonomy' => 'pwb-brand',
-				'field'    => 'id',
-				'terms'    => $queryvars['pwb-brand'],
-				'include_children' => true
-			);
-		} elseif ($queryvars['vendors']) {
-			$args['author'] = $queryvars['vendors'];
-		} elseif (is_array($queryvars['tax_page'])) {
-			$args['tax_query'][] = array(
-				'taxonomy' => $queryvars['tax_page']['taxonomy'],
-				'field'    => 'id',
-				'terms'    => $queryvars['tax_page']['term'],
-				'include_children' => true
+
+		$isAllProductsFiltering = $filterSettings['all_products_filtering'] && $filtersDataBackend;
+
+		if (!$isAllProductsFiltering) {
+			if ( ( isset($queryvars['product_category_id']) || $asDefaultCats ) && !$queryvars['product_tag'] && !$queryvars['product_brand']  && !$queryvars['pwb-brand'] ) {
+				$args['tax_query'][] = array(
+					'taxonomy' => 'product_cat',
+					'field'    => 'id',
+					'terms'    => isset($queryvars['product_category_id']) ? $queryvars['product_category_id'] : $asDefaultCats,
+					'include_children' => true
+				);
+			} elseif ($queryvars['product_tag']) {
+				$args['tax_query'][] = array(
+					'taxonomy' => 'product_tag',
+					'field'    => 'id',
+					'terms'    => $queryvars['product_tag'],
+					'include_children' => true
+				);
+			} elseif ($queryvars['product_brand']) {
+				$args['tax_query'][] = array(
+					'taxonomy' => 'product_brand',
+					'field'    => 'id',
+					'terms'    => $queryvars['product_brand'],
+					'include_children' => true
+				);
+			} elseif ($queryvars['pwb-brand']) {
+				$args['tax_query'][] = array(
+					'taxonomy' => 'pwb-brand',
+					'field'    => 'id',
+					'terms'    => $queryvars['pwb-brand'],
+					'include_children' => true
+				);
+			} elseif ($queryvars['vendors']) {
+				$args['author'] = $queryvars['vendors'];
+			} elseif (is_array($queryvars['tax_page'])) {
+				$args['tax_query'][] = array(
+					'taxonomy' => $queryvars['tax_page']['taxonomy'],
+					'field'    => 'id',
+					'terms'    => $queryvars['tax_page']['term'],
+					'include_children' => true
+				);
+			}
+		}
+
+		// set woocommerce sorting data if we do not have own sorting filtering
+		$isWpfSortBy = array_search('wpfSortBy', array_column($filtersDataBackend, 'id'));
+		if (!$isWpfSortBy && isset($woocommerceSettings['woocommercefSortBy'])) {
+			$filtersDataBackend[] = array(
+				'id'       => 'wpfSortBy',
+				'settings' => $woocommerceSettings['woocommercefSortBy'],
 			);
 		}
 
 		$temp = array();
-		foreach ($settings as $setting) {
+		foreach ($filtersDataBackend as $setting) {
 			if (!empty($setting['settings'])) {
 				$proArgs = DispatcherWpf::applyFilters('getFilterArgsPro', array(), $setting);
 				if (!empty($proArgs)) {
@@ -497,10 +528,10 @@ class WoofiltersControllerWpf extends ControllerWpf {
 								$args['order'] = 'DESC';
 								break;
 							case 'price':
-								add_filter( 'posts_clauses', array( wc()->query, 'order_by_price_asc_post_clauses' ) );
+								$args = array_merge($args, wc()->query->get_catalog_ordering_args('price'));
 								break;
 							case 'price-desc':
-								add_filter( 'posts_clauses', array( wc()->query, 'order_by_price_desc_post_clauses' ) );
+								$args = array_merge($args, wc()->query->get_catalog_ordering_args('price', 'DESC'));
 								break;
 							case 'popularity':
 								$args['orderby'] = 'meta_value_num';
@@ -539,7 +570,7 @@ class WoofiltersControllerWpf extends ControllerWpf {
 					case 'wpfTags':
 						$tagsIdStr = $setting['settings'];
 						if ($tagsIdStr) {
-							$args['tax_query'][] = array(
+							$temp['wpfTags'][] = array(
 								'taxonomy' => 'product_tag',
 								'field'    => 'id',
 								'terms'    => $tagsIdStr,
@@ -553,7 +584,7 @@ class WoofiltersControllerWpf extends ControllerWpf {
 							$taxonomy = '';
 							foreach ($attrIds as $attr) {
 								$term = get_term( $attr );
-								if ($term) {
+								if ($term && $term->taxonomy) {
 									$taxonomy = $term->taxonomy;
 									break;
 								}
@@ -651,15 +682,19 @@ class WoofiltersControllerWpf extends ControllerWpf {
 				}
 			}
 		}
-		DispatcherWpf::doAction('addArgsForFilteringBySettings', $settings);
+		DispatcherWpf::doAction('addArgsForFilteringBySettings', $filtersDataBackend);
 
 		if (isset($temp['wpfCategory'])) {
-			$temp['wpfCategory']['relation'] = strtoupper($settingsMultiLogic);
+			$temp['wpfCategory']['relation'] = strtoupper($MultiLogic);
 			$args['tax_query'][] = $temp['wpfCategory'];
 		}
 		if (isset($temp['wpfAttribute'])) {
-			$temp['wpfAttribute']['relation'] = strtoupper($settingsMultiLogic);
+			$temp['wpfAttribute']['relation'] = strtoupper($MultiLogic);
 			$args['tax_query'][] = $temp['wpfAttribute'];
+		}
+		if (isset($temp['wpfTags'])) {
+			$temp['wpfTags']['relation'] = strtoupper($MultiLogic);
+			$args['tax_query'][] = $temp['wpfTags'];
 		}
 		if ( isset($args['tax_query']) && !empty($args['tax_query']) ) {
 			$args['tax_query']['relation'] = 'AND';
@@ -668,7 +703,7 @@ class WoofiltersControllerWpf extends ControllerWpf {
 			$args['meta_query'][] = $this->getModule()->preparePriceFilter($temp['wpfPrice']['min_price'], $temp['wpfPrice']['max_price']);
 		}
 		$sortByTitle = !empty( $filterSettings['sort_by_title'] ) ? $filterSettings['sort_by_title'] : false;
-		if ( $sortByTitle && count($settings) > 0 ) {
+		if ( $sortByTitle && count($filtersDataBackend) > 0 ) {
 			$args = $this->getModule()->addCustomOrder($args, 'title');
 		}
 		if (empty($args['orderby'])) {

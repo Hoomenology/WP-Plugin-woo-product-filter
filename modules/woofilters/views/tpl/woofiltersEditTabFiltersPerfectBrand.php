@@ -4,7 +4,7 @@
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Show on frontend as', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Depending on whether you need one or several brands to be available at the same time, you may show your brands list as checkbox or dropdown.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Depending on whether you need one or several brands to be available at the same time, show your brands list as checkbox or dropdown.', 'woo-product-filter'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -65,7 +65,7 @@ if ($isPro) {
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Sort by', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Here you may set brands sorting by ascendance or descendance.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Set brands sorting by ascendance or descendance.', 'woo-product-filter'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -125,7 +125,7 @@ if ($isPro) {
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Product brands', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Here you may select product brands to be displayed on your site from the list. If you want to select several brands, hold the "Shift" button and click on brand names. Or you can hold "Ctrl" and click on brand names. Press "Ctrl" + "a" for checking all brands.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Select product brands to be displayed on your site from the list. If you want to select several brands, hold the "Shift" button and click on brand names. Or you can hold "Ctrl" and click on brand names. Press "Ctrl" + "a" for checking all brands.', 'woo-product-filter'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100 woobewoo-width-full">
@@ -163,7 +163,7 @@ if ($isPro) {
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Exclude terms ids', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Here you may exclude brand terms from filter by ids. Example input: 1,2,3 ', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Exclude brand terms from filter by ids. Example input: 1,2,3 ', 'woo-product-filter'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">

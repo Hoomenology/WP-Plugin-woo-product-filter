@@ -1,7 +1,7 @@
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Select attribute', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Here you may select attribute to be displayed on your site from the list.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__(' Select attribute to be displayed on site from the list .', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/attribute-filter-settings/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -36,7 +36,7 @@ $attributesTypes = array(
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Show on frontend as', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Depending on whether you need one or several attributes to be available at the same time, you may show your attributes list as checkbox or dropdown. <strong>Attention!</strong> Slider type work only with numeric titles of attributes', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__(' Depending on whether you need one or several attributes to be available at the same time, show attributes list as checkbox or dropdown. <strong>Attention!</strong> Slider type work only with numeric titles of attributes .', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/attribute-filter-settings/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -104,7 +104,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block">
 	<div class="settings-block-label col-xs-4 col-sm-3">
 		<?php esc_html_e('Order by custom', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Attributes are displayed according to the order of their selection in the input fields.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__(' Attributes are displayed according to the order of their selection in the input fields  .', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/attribute-filter-settings/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -123,10 +123,10 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 		</div>
 	</div>
 </div>
-<div class="row-settings-block">
+<div class="row-settings-block wpfTypeSwitchable"  data-not-type="slider">
 	<div class="settings-block-label col-xs-4 col-sm-3">
 		<?php esc_html_e('Show count', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Show count display the number of products that have the appropriate parameter.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__(' Show count display the number of products that have the appropriate parameter .', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/attribute-filter-settings/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -137,7 +137,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block wpfHidden">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Attributes', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Here you may select attributes to be displayed on your site from the list. If you want to select several attributes, hold the "Shift" button and click on names. Or you can hold "Ctrl" and click on names. Press "Ctrl" + "a" for checking all names.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__(' Select attributes to be displayed on site from the list. If you want to select several attributes, hold the "Shift" button and click on names. Or you can hold "Ctrl" and click on names. Press "Ctrl" + "a" for checking all names .', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/attribute-filter-settings/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100 woobewoo-width-full">
@@ -152,7 +152,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block">
 	<div class="settings-block-label col-xs-4 col-sm-3">
 		<?php esc_html_e('Make selected attributes as default', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Selected attributes will be marked as default.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__(' Selected attributes will be marked as default  .', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/attribute-filter-settings/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -179,7 +179,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Sort by', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Here you may set attributes sorting by ascendance or descendance.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__(' Set attributes sorting by ascendance or descendance  .', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/attribute-filter-settings/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -213,7 +213,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block">
 	<div class="settings-block-label col-xs-4 col-sm-3">
 		<?php esc_html_e('Always display all attributes', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('If checked, the entire list of attributes will always be visible, otherwise only available for filtered items.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__(' If checked, the entire list of attributes will always be visible, otherwise only available for filtered items  .', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/attribute-filter-settings/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -221,10 +221,10 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 		</div>
 	</div>
 </div>
-<div class="row-settings-block wpfTypeSwitchable" data-not-type="dropdown mul_dropdown colors">
+<div class="row-settings-block wpfTypeSwitchable" data-not-type="dropdown mul_dropdown colors slider">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Layout', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Select a vertical or horizontal layout and set the count of columns.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__(' Select a vertical or horizontal layout and set the count of columns  .', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/attribute-filter-settings/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -246,7 +246,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block wpfTypeSwitchable" data-not-type="dropdown mul_dropdown">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Maximum height in frontend', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Set maximum displayed height in frontend.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__(' Set maximum displayed height in frontend  .', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/attribute-filter-settings/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">

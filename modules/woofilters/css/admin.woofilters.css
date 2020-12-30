@@ -1,3 +1,9 @@
+.pr-0 {
+	padding-right: 0!important;
+}
+.pl-0 {
+	padding-left: 0!important;
+}
 .wpfShortcodeAdm i.fa-question {
 	margin-left: 12px;
 }
@@ -97,7 +103,8 @@
 	padding: 15px;
 	visibility: hidden;
 }
-.wpfFiltersBlockPreview .wpfPriceRangeField#wpfMinPrice, .wpfFiltersBlockPreview .wpfPriceRangeField#wpfMaxPrice {
+.wpfFiltersBlockPreview .wpfPriceRangeField#wpfMinPrice,
+.wpfFiltersBlockPreview .wpfPriceRangeField#wpfMaxPrice {
 	max-width: 50px;
 }
 .woobewoo-content .no-lr-padding {
@@ -612,4 +619,10 @@ input.wpfSmallInput{
 }
 #wpfTableTblNav table {
 	max-height: 100px;
+}
+
+@media (max-width: 585px) {
+	select.woobewoo-flat-input[name="shortcode_example"] {
+		max-width: 80%;
+	}
 }

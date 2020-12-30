@@ -6,18 +6,94 @@ class WoofiltersModelWpf extends ModelWpf {
 
 	public function getAllFilters() {
 		$filterTypes = array(
-			'wpfPrice' => array('name' => esc_html__('Price', 'woo-product-filter'), 'enabled' => true, 'unique' => true, 'group' => 'wpfPriceRange'),
-			'wpfPriceRange' => array('name' => esc_html__('Price range', 'woo-product-filter'), 'enabled' => true, 'unique' => true, 'group' => 'wpfPrice'),
-			'wpfSortBy' => array('name' => esc_html__('Sort by', 'woo-product-filter'), 'enabled' => true, 'unique' => true),
-			'wpfCategory' => array('name' => esc_html__('Product categories', 'woo-product-filter'), 'enabled' => true, 'unique' => false, 'filtername' => 'filter_cat'),
-			'wpfTags' => array('name' => esc_html__('Product tags', 'woo-product-filter'), 'enabled' => true, 'unique' => false, 'filtername' => 'product_tag'),
-			'wpfAttribute' => array('name' => esc_html__('Attribute', 'woo-product-filter'), 'enabled' => true, 'unique' => false),
-			'wpfAuthor' => array('name' => esc_html__('Author', 'woo-product-filter'), 'enabled' => true, 'unique' => true),
-			'wpfFeatured' => array('name' => esc_html__('Featured', 'woo-product-filter'), 'enabled' => true, 'unique' => true),
-			'wpfOnSale' => array('name' => esc_html__('On sale', 'woo-product-filter'), 'enabled' => true, 'unique' => true),
-			'wpfInStock' => array('name' => esc_html__('Stock status', 'woo-product-filter'), 'enabled' => true, 'unique' => true),
-			'wpfRating' => array('name' => esc_html__('Rating', 'woo-product-filter'), 'enabled' => true, 'unique' => true),
-			'wpfSearchText' => array('name' => esc_html__('Search by Text', 'woo-product-filter'), 'enabled' => false, 'unique' => true),
+			'wpfPrice' => array(
+				'name'         => esc_html__('Price', 'woo-product-filter'),
+				'slug'         => esc_attr__('price', 'woo-product-filter'),
+				'enabled'      => true,
+				'unique'       => true,
+				'content_type' => 'meta',
+				'group'        => 'wpfPriceRange'
+			),
+			'wpfPriceRange' => array(
+				'name'         => esc_html__('Price range', 'woo-product-filter'),
+				'slug'         => esc_attr__('price range', 'woo-product-filter'),
+				'enabled'      => true,
+				'unique'       => true,
+				'content_type' => 'meta',
+				'group'        => 'wpfPrice'
+			),
+			'wpfSortBy' => array(
+				'name' => esc_html__('Sort by', 'woo-product-filter'),
+				'slug'         => esc_attr__('sort by', 'woo-product-filter'),
+				'enabled'      => true,
+				'unique'       => true,
+				'content_type' => 'meta',
+			),
+			'wpfCategory' => array(
+				'name'         => esc_html__('Product categories', 'woo-product-filter'),
+				'slug'         => esc_attr__('category', 'woo-product-filter'),
+				'enabled'      => true,
+				'unique'       => false,
+				'content_type' => 'taxonomy',
+				'filtername'   => 'filter_cat'
+			),
+			'wpfTags' => array(
+				'name'         => esc_html__('Product tags', 'woo-product-filter'),
+				'slug'         => esc_attr__('tag', 'woo-product-filter'),
+				'enabled'      => true,
+				'unique'       => false,
+				'content_type' => 'taxonomy',
+				'filtername'   => 'product_tag'
+			),
+			'wpfAttribute' => array(
+				'name'         => esc_html__('Attribute', 'woo-product-filter'),
+				'slug'         => '',
+				'enabled'      => true,
+				'unique'       => false,
+				'content_type' => 'taxonomy',
+			),
+			'wpfAuthor' => array(
+				'name'         => esc_html__('Author', 'woo-product-filter'),
+				'slug'         => esc_attr__('author', 'woo-product-filter'),
+				'enabled'      => true,
+				'unique'       => true,
+				'content_type' => 'user',
+			),
+			'wpfFeatured' => array(
+				'name'         => esc_html__('Featured', 'woo-product-filter'),
+				'slug'         => esc_attr__('featured', 'woo-product-filter'),
+				'enabled'      => true,
+				'unique'       => true,
+				'content_type' => 'meta',
+			),
+			'wpfOnSale' => array(
+				'name'         => esc_html__('On sale', 'woo-product-filter'),
+				'slug'         => esc_attr__('on sale', 'woo-product-filter'),
+				'enabled'      => true,
+				'unique'       => true,
+				'content_type' => 'meta',
+			),
+			'wpfInStock' => array(
+				'name'         => esc_html__('Stock status', 'woo-product-filter'),
+				'slug'         => esc_attr__('stock status', 'woo-product-filter'),
+				'enabled'      => true,
+				'unique'       => true,
+				'content_type' => 'meta',
+			),
+			'wpfRating' => array(
+				'name'         => esc_html__('Rating', 'woo-product-filter'),
+				'slug'         => esc_attr__('rating', 'woo-product-filter'),
+				'enabled'      => true,
+				'unique'       => true,
+				'content_type' => 'meta',
+			),
+			'wpfSearchText' => array(
+				'name'         => esc_html__('Search by Text', 'woo-product-filter'),
+				'slug'         => esc_attr__('text', 'woo-product-filter'),
+				'enabled'      => false,
+				'unique'       => true,
+				'content_type' => '',
+			),
 		);
 
 		/**
@@ -26,7 +102,13 @@ class WoofiltersModelWpf extends ModelWpf {
 		 * @link https://wordpress.org/plugins/perfect-woocommerce-brands
 		 */
 		if (taxonomy_exists('pwb-brand')) {
-			$filterTypes['wpfPerfectBrand'] = array('name' => esc_html__('Perfect brands', 'woo-product-filter'), 'enabled' => true, 'unique' => false);
+			$filterTypes['wpfPerfectBrand'] = array(
+				'name'         => esc_html__('Perfect brands', 'woo-product-filter'),
+				'slug'         => esc_attr__('brand', 'woo-product-filter'),
+				'enabled'      => true,
+				'unique'       => false,
+				'content_type' => 'taxonomy',
+			);
 		}
 
 		/**
@@ -35,7 +117,13 @@ class WoofiltersModelWpf extends ModelWpf {
 		 * @link https://woocommerce.com/products/brands
 		 */
 		if (taxonomy_exists('product_brand')) {
-			$filterTypes['wpfBrand'] = array('name' => esc_html__('Product brands', 'woo-product-filter'), 'enabled' => false, 'unique' => true);
+			$filterTypes['wpfBrand'] = array(
+				'name'         => esc_html__('Product brands', 'woo-product-filter'),
+				'slug'         => esc_attr__('brand', 'woo-product-filter'),
+				'enabled'      => false,
+				'unique'       => true,
+				'content_type' => 'taxonomy',
+			);
 		}
 
 		/**
@@ -44,7 +132,13 @@ class WoofiltersModelWpf extends ModelWpf {
 		 * @link https://wordpress.org/plugins/wc-vendors/
 		 */
 		if ( class_exists('WC_Vendors')) {
-			$filterTypes['wpfVendors'] = array('name' => esc_html__('Vendors', 'woo-product-filter'), 'enabled' => false, 'unique' => true);
+			$filterTypes['wpfVendors'] = array(
+				'name'         => esc_html__('Vendors', 'woo-product-filter'),
+				'slug'         => esc_attr__('vendors', 'woo-product-filter'),
+				'enabled'      => false,
+				'unique'       => true,
+				'content_type' => 'user',
+			);
 		}
 
 		return DispatcherWpf::applyFilters('addFilterTypes', $filterTypes);
@@ -140,7 +234,7 @@ class WoofiltersModelWpf extends ModelWpf {
 			}
 		}
 		$settingData = array('settings' => $data['settings']);
-		$data['setting_data'] = serialize($settingData);
+		$data['setting_data'] = addslashes(serialize($settingData));
 		return $data;
 	}
 }

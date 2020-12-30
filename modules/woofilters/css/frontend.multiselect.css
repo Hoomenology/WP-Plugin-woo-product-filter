@@ -12,25 +12,25 @@
     background-color: #fff;
     padding: 5px 20px 5px 5px;
     margin-top: 1px;
-    font-size: 13px;
-    color: #aaa;
     outline: none;
     white-space: nowrap;
 }
 
 .ms-options-wrap > button:after {
-    content: ' ';
-    height: 0;
-    position: absolute;
-    top: 50%;
-    right: 5px;
-    width: 0;
-    border: 6px solid rgba(0, 0, 0, 0);
-    border-top-color: #999;
-    margin-top: -3px;
+  content: ' ';
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  margin-top: -3px;
+  width: 0.5em;
+  height: .5em;
+  border-right: 0.16em solid;
+  border-bottom: 0.16em solid;
+  transform: rotate(45deg);
 }
 
 .ms-options-wrap > .ms-options {
+    padding: 0.5rem;
     position: absolute;
     left: 0;
     width: 100%;
@@ -52,7 +52,6 @@
 
 .ms-options-wrap > .ms-options .ms-selectall {
     display: inline-block;
-    font-size: .9em;
     text-transform: lowercase;
     text-decoration: none;
 }
@@ -97,11 +96,9 @@
     top: 7px;
 }
 .ms-options-wrap button {
-    border-radius:0px !important;
-    padding:5px !important;
-    color: #666 !important;
-    border: 1px solid #f1f1f1 !important;
-    font-size: 14px !important;
+    border-radius:3px !important;
+    padding:0.8rem !important;
+    border: 1px solid #b8b8b8 !important;
     line-height: 21px !important;
 }
 .ms-options ul li {
@@ -120,14 +117,14 @@
     margin-top:0px;
 }
 .ms-options-wrap > button:after {
-    content: ' ';
-    height: 0;
-    position: absolute;
-    top: 50%;
-    right: 5px;
-    width: 0;
-    border: 3px solid rgba(0, 0, 0, 0);
-    border-top-color: #666;
-    margin-top: -3px;
-    border-top-width: 6px;
+  content: ' ';
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  margin-top: -3px;
+  width: 0.5em;
+  height: .5em;
+  border-right: 0.16em solid;
+  border-bottom: 0.16em solid;
+  transform: rotate(45deg);
 }

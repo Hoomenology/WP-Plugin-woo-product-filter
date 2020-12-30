@@ -11,7 +11,12 @@ $ratingTypes = array(
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Show on frontend as', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Depending on whether you need one or several attributes to be available at the same time, you may show your attributes list as checkbox or dropdown.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="
+		<?php 
+		echo esc_attr(__('Depending on whether you need one or several attributes to be available at the same time, show your attributes list as checkbox or dropdown. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-rating-settings-and-filtering/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.')
+		; 
+		?>
+		"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -27,7 +32,7 @@ $ratingTypes = array(
 <div class="row-settings-block wpfTypeSwitchable" data-type="dropdown">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Dropdown label', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Dropdown first option text.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Dropdown first option text. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-rating-settings-and-filtering/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -56,7 +61,7 @@ if ($isPro) {
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Additional text for 1-4', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Additional text for 1-4 rating filter.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Additional text for 1-4 rating filter. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-rating-settings-and-filtering/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -72,7 +77,7 @@ if ($isPro) {
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Additional text for 5', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Additional text for 5-star rating filter.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Additional text for 5-star rating filter. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-rating-settings-and-filtering/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">

@@ -4,13 +4,19 @@
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Show on frontend as', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Depending on whether you need one or several tags to be available at the same time, you may show your tags list as checkbox or dropdown.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Depending on whether you need one or several tags to be available at the same time, show tags list as checkbox or dropdown. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-tags/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
 			<?php 
 				HtmlWpf::selectbox('f_frontend_type', array(
-					'options' => array('list' => 'Checkbox list', 'dropdown' => 'Dropdown', 'mul_dropdown' => 'Multiple Dropdown', 'buttons' => 'Buttons' . $labelPro, 'text' => 'Text' . $labelPro),
+					'options' => array(
+						'list' => 'Checkbox list',
+						'dropdown' => 'Dropdown',
+						'mul_dropdown' => 'Multiple Dropdown',
+						'buttons' => 'Buttons' . $labelPro,
+						'text' => 'Text' . $labelPro
+					),
 					'attrs' => 'class="woobewoo-flat-input"'
 				));
 				?>
@@ -28,7 +34,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block wpfTypeSwitchable" data-type="dropdown mul_dropdown">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Dropdown label', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Dropdown first option text.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Dropdown first option text. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-tags/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -39,7 +45,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block wpfTypeSwitchable" data-type="mul_dropdown">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Show search for dropdown', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Show search field in multiple dropdown box', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Show search field in multiple dropdown box. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-tags/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-values-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -53,7 +59,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Sort by', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Here you may set tags sorting by ascendance or descendance.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Set tags sorting by ascendance or descendance. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-tags/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -69,7 +75,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block">
 	<div class="settings-block-label col-xs-4 col-sm-3">
 		<?php esc_html_e('Order by custom', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Tags are displayed according to the order of their selection in the input fields.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Tags are displayed according to the order of their selection in the input fields. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-tags/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -80,7 +86,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block">
 	<div class="settings-block-label col-xs-4 col-sm-3">
 		<?php esc_html_e('Show count', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Show count display the number of products that have the appropriate parameter.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Show count display the number of products that have the appropriate parameter. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-tags/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -91,7 +97,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block">
 	<div class="settings-block-label col-xs-4 col-sm-3">
 		<?php esc_html_e('Hide tags without products', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Hide tags without products', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Hide tags without products. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-tags/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -102,7 +108,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Product tags', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Here you may select product tags to be displayed on your site from the list. If you want to select several tags, hold the "Shift" button and click on tag names. Or you can hold "Ctrl" and click on tag names. Press "Ctrl" + "a" for checking all tags.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Select product tags to be displayed on site from the list. If you want to select several tags, hold the "Shift" button and click on tag names. Or hold "Ctrl" and click on tag names. Press "Ctrl" + "a" for checking all tags. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-tags/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100 woobewoo-width-full">
@@ -119,7 +125,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block">
 	<div class="settings-block-label col-xs-4 col-sm-3">
 		<?php esc_html_e('Make selected tags as default', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Selected tags will be marked as default and hidden on frontend.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Selected tags will be marked as default and hidden on frontend. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-tags/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -130,7 +136,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Exclude terms ids', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Here you may exclude tags terms from filter by ids. Example input: 1,2,3', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Exclude tags terms from filter by ids. Example input: 1,2,3. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-tags/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -174,7 +180,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block">
 	<div class="settings-block-label col-xs-4 col-sm-3">
 		<?php esc_html_e('Always display all tags', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('If checked, the entire list of tags will always be visible, otherwise only available for filtered items.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('If checked, the entire list of tags will always be visible, otherwise only available for filtered items. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-tags/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -185,7 +191,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block wpfTypeSwitchable" data-not-type="dropdown mul_dropdown">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Layout', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Select a vertical or horizontal layout and set the count of columns.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Select a vertical or horizontal layout and set the count of columns. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-tags/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -207,7 +213,7 @@ ViewWpf::display('woofiltersEditTabCustomTags');
 <div class="row-settings-block wpfTypeSwitchable" data-not-type="dropdown mul_dropdown">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Maximum height in frontend', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Set maximum displayed height in frontend.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Set maximum displayed height in frontend. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/product-tags/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">

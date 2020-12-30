@@ -403,7 +403,7 @@
 				if(!hidden) subOptions.filter('[data-select-value*="'+value+'"]').removeClass('wpfHidden');
 			}
 		});
-		
+
 		if (_thisObj.isElementorEditMode) {
 			settingsValues.find('input[type="checkbox"],select').trigger('wpf-change');
 		}
@@ -451,7 +451,7 @@
 		var _this = this.$obj,
 			_noOptionsFilters = this.$noOptionsFilters,
 			wpfGetPreviewInit = false;
-		
+
 		jQuery('.wpfMainWrapper').find('select[multiple]').multiselect({
 			columns: 1,
 			placeholder: 'Select options'
@@ -515,7 +515,7 @@
 				_this.getPreviewAjax();
 			}
 		});
-		
+
 		jQuery("body").on("change", '#wpfFiltersEditForm [name="f_hide_taxonomy"]', function(e) {
 			var mList = jQuery(this).closest('table').find('select[name="f_mlist[]"]'),
 				parentCats = mList.data('parents');
@@ -566,7 +566,7 @@
 			e.preventDefault();
 			var option = jQuery('#wpfChooseFilters option:selected');
 			if(option.length == 0 || option.attr('data-enabled') != '1' || option.attr('data-available') != 'add') return;
-			
+
 			_this.wpfAddFilter(option.attr('value'));
 			resetEnabledFilters();
 			_this.getPreviewAjax();
@@ -588,6 +588,10 @@
 				options = el.closest('.wpfFilter').find('.wpfOptions');
 
 			if (i.hasClass('fa-chevron-down')){
+				var elOther = jQuery('.wpfFilter a.wpfToggle i.fa-chevron-up'),
+					optionsOther = elOther.closest('.wpfFilter').find('.wpfOptions');
+				elOther.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+				optionsOther.addClass('wpfHidden');
 				i.removeClass('fa-chevron-down').addClass('fa-chevron-up');
 				options.removeClass('wpfHidden');
 				options.find('select[name="f_mlist[]"]').trigger('chosen:updated');
@@ -664,7 +668,7 @@
 			filters.forEach(function (value) {
 				var settings = value.settings;
 				if (typeof settings == 'undefined' || !settings['f_enable']) return true;
-				
+
 				_this.wpfAddFilter(value.id, value.uniqId, settings);
 			});
 			resetEnabledFilters();
@@ -683,12 +687,12 @@
 			jQuery('.wpfAutomaticOrByHand input[type="checkbox"]').trigger('wpf-change');
 		});
 	});
-	
+
 	AdminPage.prototype.setAttrTerms = (function(mlist, slug){
 		var _this = this,
 			options = jQuery('.wpfAttributesTerms input[name="attr-'+slug+'"]');
 		if(typeof(options) == 'undefined' || options.length == 0) return;
-		
+
 		try {
 			var terms = JSON.parse(options.val()),
 				keys = JSON.parse(options.attr('data-order'));
@@ -704,7 +708,7 @@
 			var filterNum = filterId.replace('wpfFilter', '');
 			settings = (_this.filtersSettings && filterNum in _this.filtersSettings ? _this.filtersSettings[filterNum]['settings'] : []);
 		}
-		
+
 		keys.forEach(function (value) {
 			if(value in terms) {
 				mlist.append('<option value="'+value+'">'+terms[value]+'</option>');
@@ -717,7 +721,7 @@
 				mlist.append(option.prop('selected', true));
 			}
 		});
-		
+
 		if(mlist.find('option').length > 1) {
 			mlist.closest('.row-settings-block').removeClass('wpfHidden');
 		}
@@ -728,7 +732,7 @@
 		}
 		_this.getPreviewAjax();
 	});
-	
+
 	AdminPage.prototype.fListChanged = (function(_this){
 		var _thisObj = this,
 			attrSlug = _this.val(),
@@ -736,11 +740,11 @@
 			startName = _this.closest('.wpfFilter').attr('data-title'),
 			fullTitle = startName + changedName;
 		_this.closest('.wpfFilter').find('.wpfFilterTitle').text(fullTitle);
-		
+
 		var attr_terms = _this.closest('.wpfOptions').find('[name="f_mlist[]"]');
 		attr_terms.closest('tr').addClass('wpfHidden');
 		attr_terms.find('option').remove();
-		
+
 		if(attrSlug != 0) {
 			var terms = jQuery('.wpfAttributesTerms input[name="attr-'+attrSlug+'"]');
 			if(typeof(terms) == 'undefined' || terms.length == 0) {
@@ -765,18 +769,18 @@
 			attr_terms.trigger('change');
 		}
 	});
-	
+
 	AdminPage.prototype.wpfAddFilter = (function(id, uniqId, settings) {
 		var _this = this,
 			_noOptionsFilters = this.$noOptionsFilters,
 			wpfGetPreviewInit = false,
 			template = jQuery('.wpfOptionsTemplate .wpfFilterOptions[data-filter="'+id+'"]');
 		if(template.length == 0) return true;
-		
+
 		_this.wpfWaitLoad = true;
 		var optionsTemplate = template.clone(),
 			text = optionsTemplate.find('input[name=f_name]').val();
-		
+
 		template.find('[id]').each(function() {
 			var $this = jQuery(this);
 			$this.attr('data-id', $this.attr('id'));
@@ -790,7 +794,7 @@
 			optionsTemplate.find('label[for="' + tempId + '"]').attr('for', newId);
 			$this.removeAttr('data-id');
 		});
-		
+
 		if(typeof settings !== 'undefined') {
 			optionsTemplate.find('input, select').map(function (index, elm) {
 				var name = elm.name,
@@ -807,7 +811,7 @@
 					} else {
 						$elm.prop("checked", settings[name]);
 					}
-					
+
 				} else if (elm.type === 'select-multiple') {
 					if (_this.$multiSelectFields.includes(elm.name)) {
 						if (settings[name]) {
@@ -863,14 +867,14 @@
 		}
 		blockTemplate.find('.wpfFilterFrontTitleOpt input').val(title);
 		jQuery('.wpfFiltersBlock').append(blockTemplate);
-		
+
 		_this.filterIterator++;
-		
+
 		blockTemplate.trigger('changeTooltips');
 		blockTemplate.find('select[name="f_mlist[]"]').chosen({ width:"95%" });
-		
+
 		blockTemplate.find('input,select').trigger('wpf-change');
-		
+
 		if(id == 'wpfPrice') {
 			var defaultSlider = blockTemplate.find('#wpfSliderRange'),
 				minValue = 200,
@@ -897,7 +901,7 @@
 					blockTemplate.find('.wpfPriceInputs').hide();
 				}
 			}).trigger('change');
-			
+
 			minSelector.on('change', function(e){
 				e.preventDefault();
 				defaultSlider.slider('values', 0, $(this).val());
@@ -946,7 +950,7 @@
 			if(title.val() == '') {
 				title.val(filter.find('.wpfFilterTitle').text());
 			}
-			
+
 			filter.find('input, select').map(function(index, elm) {
 				var $elm = jQuery(elm),
 					value = $elm.val();
@@ -989,7 +993,7 @@
 					filterName = attrNames[items['f_list']];
 				}
 			}
-			
+
 			filter.find('input[data-preselect-flag="1"]').each(function(){
 				var elm = this;
 				if(elm.type === 'checkbox' && elm.checked) {

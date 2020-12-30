@@ -18,7 +18,12 @@ $skins = array(
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Filter skin', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Here you may select the price filter skin', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="
+		<?php 
+		echo esc_attr(__('Select the price filter skin. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/price-product-filter/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.')
+		; 
+		?>
+		"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">

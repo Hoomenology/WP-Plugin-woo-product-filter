@@ -24,7 +24,7 @@ if ($isPro) {
 <div class="row-settings-block wpfTypeSwitchable" data-type="dropdown">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Dropdown label', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Dropdown first option text.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__(' Dropdown first option text. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/stock-status-filter-optionswpf/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
@@ -40,7 +40,7 @@ if ($isPro) {
 <div class="row-settings-block">
 	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Stock status', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Here you may select the sorting options available for your site users (min two options).', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__(' Select the sorting options available for site users (min two options). ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/stock-status-filter-optionswpf/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="sub-block-values settings-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-value-elementor-row-revert">
@@ -63,7 +63,7 @@ if ($isPro) {
 <div class="row-settings-block">
 	<div class="settings-block-label col-xs-4 col-sm-3">
 		<?php esc_html_e('Change status names', 'woo-product-filter'); ?>
-		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr__('Here you may change stock status names.', 'woo-product-filter'); ?>"></i>
+		<i class="fa fa-question woobewoo-tooltip no-tooltip" title="<?php echo esc_attr(__('Change stock status names. ', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/stock-status-filter-optionswpf/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 	</div>
 	<div class="sub-block-values settings-values-w100 col-xs-8 col-sm-9">
 		<div class="settings-value settings-w100">
